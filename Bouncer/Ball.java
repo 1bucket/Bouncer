@@ -11,9 +11,13 @@ import java.awt.Color;
 
 public class Ball {
 
-    private Point position; // components in pixels; position of the center of the ball
-    private Point velocity; // components in pixels/second
-    private Point acceleration; // components in pixel/second/second
+    private float xPos, yPos;
+    private float xVel, yVel;
+    private float xAccel, yAccel;
+
+    // private Point position; // components in pixels; position of the center of the ball
+    // private Point velocity; // components in pixels/second
+    // private Point acceleration; // components in pixel/second/second
     private Color color; 
 
     /**
@@ -26,9 +30,15 @@ public class Ball {
      *      The initial y position of the ball
      */
     public Ball(int x, int y) {
-        position = new Point(x, y);
-        velocity = new Point(0, 0);
-        acceleration = new Point(0, 0);
+        // position = new Point(x, y);
+        // velocity = new Point(0, 0);
+        // acceleration = new Point(0, 0);
+        xPos = x;
+        yPos = y;
+        xVel = 0;
+        yVel = 0;
+        xAccel = 0;
+        yAccel = 0;
         color = Color.RED;
     }
 
@@ -45,8 +55,12 @@ public class Ball {
      * Applies this Ball's velocity to its position.
      */
     private void applyVelocity() {
-        double newX = position.getX() + velocity.getX() / Settings.refreshRate;
-        double newY = position.getY() + velocity.getY() / Settings.refreshRate;
+        // double newX = position.getX() + velocity.getX() / Settings.refreshRate;
+        // double newY = position.getY() + velocity.getY() / Settings.refreshRate;
+        float dx = xVel / Settings.refreshRate;
+        float dy = yVel / Settings.refreshRate;
+        float newX = xPos + dx;
+        float newY = yPos + dy;
         // System.out.println("newX: " + newX + "newY: " + newY);
         setPosition(newX, newY);
     }
@@ -55,39 +69,73 @@ public class Ball {
      * Applies this Ball's acceleration to its velocity.
      */
     private void applyAcceleration() {
-        double newVX = velocity.getX() + acceleration.getX() / Settings.refreshRate;
-        double newVY = velocity.getY() + acceleration.getY() / Settings.refreshRate;
+        // double newVX = velocity.getX() + acceleration.getX() / Settings.refreshRate;
+        // double newVY = velocity.getY() + acceleration.getY() / Settings.refreshRate;
+        float dx = xAccel / Settings.refreshRate;
+        float dy = yAccel / Settings.refreshRate;
+        float newVX = xVel + dx;
+        float newVY = yVel + dy;
         setVelocity(newVX, newVY);
     }
 
     /**
-     * Returns this Ball's position
+     * Returns this Ball's x position
      * 
      * @return
-     *      A Point representing the position of this Ball
+     *      A float representing the x position of this Ball
      */
-    public Point getPosition() {
-        return position;
+    public float getXPos() {
+        return xPos;
     }
 
     /**
-     * Returns this Ball's velocity
+     * Returns this Ball's y position
      * 
      * @return
-     *      A Point representing the velocity of this ball
+     *      A float representing the y position of this Ball
      */
-    public Point getVelocity() {
-        return velocity;
+    public float getYPos() {
+        return yPos;
     }
 
     /**
-     * Returns this Ball's acceleration
+     * Returns this Ball's x velocity
      * 
      * @return
-     *      A Point representing the acceleration of this ball
+     *      A float representing the x velocity of this Ball
      */
-    public Point getAcceleration() {
-        return acceleration;
+    public float getXVel() {
+        return xVel;
+    }
+
+    /**
+     * Returns this Ball's y velocity
+     * 
+     * @return
+     *      A float representing the y velocity of this Ball
+     */
+    public float getYVel() {
+        return yVel;
+    }
+
+    /**
+     * Returns this Ball's x acceleration
+     * 
+     * @return
+     *      A float representing the x acceleration of this Ball
+     */
+    public float getXAccel() {
+        return xAccel;
+    }
+
+    /**
+     * Returns this Ball's y acceleration
+     * 
+     * @return
+     *      A float representing the y acceleration of this Ball
+     */
+    public float getYAccel() {
+        return yAccel;
     }
 
     /**
@@ -109,8 +157,10 @@ public class Ball {
      * @param y
      *      The new y position of this Ball
      */
-    public void setPosition(double x, double y) {
-        position.setLocation(x, y);
+    public void setPosition(float x, float y) {
+        // position.setLocation(x, y);
+        xPos = x;
+        yPos = y;
     }
 
     /**
@@ -122,8 +172,10 @@ public class Ball {
      * @param y
      *      The new y velocity of this Ball
      */
-    public void setVelocity(double x, double y) {
-        velocity.setLocation(x, y);
+    public void setVelocity(float x, float y) {
+        // velocity.setLocation(x, y);
+        xVel = x;
+        yVel = y;
     }
 
     /**
@@ -135,8 +187,10 @@ public class Ball {
      * @param y
      *      The new y acceleration of this Ball
      */
-    public void setAcceleration(double x, double y) {
-        acceleration.setLocation(x, y);
+    public void setAcceleration(float x, float y) {
+        // acceleration.setLocation(x, y);
+        xAccel = x;
+        yAccel = y;
     }
 
     /**

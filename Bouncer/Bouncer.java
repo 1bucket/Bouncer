@@ -10,6 +10,7 @@ import java.awt.Toolkit;
 import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -32,7 +33,9 @@ public class Bouncer {
         frame.setVisible(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
-        frame.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        frame.setPreferredSize(screenSize);
         frame.pack();
 
         masterPanel = new JPanel() {
@@ -44,9 +47,8 @@ public class Bouncer {
                 int drawPosX, drawPosY;
                 for (Ball ball : balls) {
                     g.setColor(ball.getColor());
-                    pos = ball.getPosition();
-                    drawPosX = (int)pos.getX() - Settings.ballRadius;
-                    drawPosY = (int)pos.getY() - Settings.ballRadius;
+                    drawPosX = (int)ball.getXPos() - Settings.ballRadius;
+                    drawPosY = (int)ball.getYPos() - Settings.ballRadius;
 
                     g.fillOval(drawPosX, drawPosY, diameter, diameter);
                 }
@@ -61,16 +63,16 @@ public class Bouncer {
         int initialVelocityBoundsY = 10;
         for (int num = 0; num < Settings.numBalls; num += 1) {
             // balls spawn in the middle of the screen
-            ball = new Ball(masterPanel.getWidth() / 2, 3 * masterPanel.getHeight() / 4);
+            ball = new Ball((int)screenSize.getWidth() / 2, 3 * (int)screenSize.getHeight() / 4);
 
             // initial velocity
             ball.setVelocity(
-                initialVelocityBoundsX * (2 * Math.random() - 1), 
-                initialVelocityBoundsY * (2 * Math.random() - 1)
+                initialVelocityBoundsX * (2 * (float)Math.random() - 1), 
+                initialVelocityBoundsY * (2 * (float)Math.random() - 1)
             );
 
             // subject to gravity
-            ball.setAcceleration((int)Settings.gravity.getX(), (int)Settings.gravity.getY());
+            ball.setAcceleration((int)Settings.gravityX, (int)Settings.gravityY);
 
             // set random color
             ball.setColor(new Color((float)Math.random(), (float)Math.random(), (float)Math.random()));
@@ -86,9 +88,17 @@ public class Bouncer {
         timer.setRepeats(true);
         timer.start();
 
+        Timer test = new Timer(1000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // System.out.println("toamto " + t++ + ": " + balls.get(0).getYPos());
+            }
+        });
+        test.setRepeats(true);
+        test.start();
+
         // display frame
         frame.setVisible(true);
-        System.out.println("panel: " + frame.getWidth() + ", " + frame.getHeight());
+        // System.out.println("panel: " + frame.getWidth() + ", " + frame.getHeight());
     }
 
     /**
@@ -96,33 +106,38 @@ public class Bouncer {
      */
     private void run() {
         // ball updates
-        Point pos;
+        float x, y;
         for (Ball ball : balls) {
+            ball.updateMotionVectors();
             // collision w/ frame bounds
-            pos = ball.getPosition();
-            if (pos.getX() <= Settings.ballRadius || pos.getX() >= masterPanel.getWidth() - Settings.ballRadius) {
+            x = ball.getXPos();
+            y = ball.getYPos();
+
+
+            if (x <= Settings.ballRadius || x >= masterPanel.getWidth() - Settings.ballRadius) {
                 // System.out.println("bonk");
-                double boundX = pos.getX();
+                ball.setVelocity(
+                    -1 * Settings.getAbsorptionResistanceX(ball.getXVel()) * ball.getXVel(), // bounce
+                    Settings.frictionResistanceY * ball.getYVel() // friction
+                );
+                float boundX = x;
                 boundX = Math.min(boundX, masterPanel.getWidth() - Settings.ballRadius);
                 boundX = Math.max(boundX, Settings.ballRadius);
-                pos.setLocation(boundX, pos.getY());
-                ball.setVelocity(
-                    -1 * Settings.absorptionResistanceX * ball.getVelocity().getX(), // bounce
-                    Settings.frictionResistanceY * ball.getVelocity().getY() // friction
-                );
+                ball.setPosition(boundX, y);
             }
-            if (pos.getY() <= Settings.ballRadius || pos.getY() >= masterPanel.getHeight() - Settings.ballRadius) {
+            if (y <= Settings.ballRadius || y >= masterPanel.getHeight() - Settings.ballRadius) {
                 // System.out.println("beep");
-                double boundY = pos.getY();
+                // System.out.println(ball.getYVel());
+                ball.setVelocity(
+                    Settings.frictionResistanceX * ball.getXVel(), // friction
+                    -1 * Settings.getAbsorptionResistanceY(ball.getYVel()) * ball.getYVel() // bounce
+                );
+                float boundY = y;
                 boundY = Math.min(boundY, masterPanel.getHeight() - Settings.ballRadius);
                 boundY = Math.max(boundY, Settings.ballRadius);
-                pos.setLocation(pos.getX(), boundY);
-                ball.setVelocity(
-                    Settings.frictionResistanceX * ball.getVelocity().getX(), // friction
-                    -1 * Settings.absorptionResistanceY * ball.getVelocity().getY() // bounce
-                );
+                ball.setPosition(x, boundY);
             }
-            ball.updateMotionVectors();
+            // System.out.println("yvel: " + ball.getYVel());
             // System.out.println(t++);
             // System.out.println("Position" + ball.getPosition());
             // System.out.println("Velocity" + ball.getVelocity());
