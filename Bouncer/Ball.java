@@ -59,6 +59,10 @@ public class Ball {
         // double newY = position.getY() + velocity.getY() / Settings.refreshRate;
         float dx = xVel / Settings.refreshRate;
         float dy = yVel / Settings.refreshRate;
+        // float delay = Bouncer.timer.getDelay() / (float)1000.0;
+        // float dx = xVel * delay;
+        // float dy = yVel * delay;
+        // System.out.println("dx: " + dx + ", dy: " + dy);
         float newX = xPos + dx;
         float newY = yPos + dy;
         // System.out.println("newX: " + newX + "newY: " + newY);
@@ -73,6 +77,9 @@ public class Ball {
         // double newVY = velocity.getY() + acceleration.getY() / Settings.refreshRate;
         float dx = xAccel / Settings.refreshRate;
         float dy = yAccel / Settings.refreshRate;
+        // float delay = Bouncer.timer.getDelay() / (float)1000.0;
+        // float dx = xAccel * delay;
+        // float dy = yAccel * delay;
         float newVX = xVel + dx;
         float newVY = yVel + dy;
         setVelocity(newVX, newVY);
@@ -174,6 +181,7 @@ public class Ball {
      */
     public void setVelocity(float x, float y) {
         // velocity.setLocation(x, y);
+        // System.out.println(x + " , " + y);
         xVel = x;
         yVel = y;
     }

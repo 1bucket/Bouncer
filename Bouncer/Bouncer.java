@@ -20,10 +20,13 @@ import java.util.ArrayList;
 
 public class Bouncer {
 
+
+    // public static Timer timer;
+    private int frameCount = 0;
     private int t = 0;
     // UI components
-    static private JFrame frame;
-    static private JPanel masterPanel;
+    private JFrame frame;
+    private JPanel masterPanel;
 
     private ArrayList<Ball> balls;
 
@@ -59,7 +62,7 @@ public class Bouncer {
 
         balls = new ArrayList<Ball>();
         Ball ball;
-        int initialVelocityBoundsX = 30;
+        int initialVelocityBoundsX = 100;
         int initialVelocityBoundsY = 10;
         for (int num = 0; num < Settings.numBalls; num += 1) {
             // balls spawn in the middle of the screen
@@ -68,8 +71,10 @@ public class Bouncer {
             // initial velocity
             ball.setVelocity(
                 initialVelocityBoundsX * (2 * (float)Math.random() - 1), 
+                // 100,
                 initialVelocityBoundsY * (2 * (float)Math.random() - 1)
             );
+            // System.out.println(ball.getXVel());
 
             // subject to gravity
             ball.setAcceleration((int)Settings.gravityX, (int)Settings.gravityY);
@@ -90,7 +95,7 @@ public class Bouncer {
 
         Timer test = new Timer(1000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // System.out.println("toamto " + t++ + ": " + balls.get(0).getYPos());
+                // System.out.println("toamto " + t);
             }
         });
         test.setRepeats(true);
@@ -118,7 +123,7 @@ public class Bouncer {
                 // System.out.println("bonk");
                 ball.setVelocity(
                     -1 * Settings.getAbsorptionResistanceX(ball.getXVel()) * ball.getXVel(), // bounce
-                    Settings.frictionResistanceY * ball.getYVel() // friction
+                    Settings.getFrictionResistanceY() * ball.getYVel() // friction
                 );
                 float boundX = x;
                 boundX = Math.min(boundX, masterPanel.getWidth() - Settings.ballRadius);
@@ -128,22 +133,29 @@ public class Bouncer {
             if (y <= Settings.ballRadius || y >= masterPanel.getHeight() - Settings.ballRadius) {
                 // System.out.println("beep");
                 // System.out.println(ball.getYVel());
+                float former = ball.getYVel();
                 ball.setVelocity(
-                    Settings.frictionResistanceX * ball.getXVel(), // friction
+                    Settings.getFrictionResistanceX() * ball.getXVel(), // friction
                     -1 * Settings.getAbsorptionResistanceY(ball.getYVel()) * ball.getYVel() // bounce
                 );
+                // System.out.println(Math.abs(former) + " to " + Math.abs(ball.getYVel()));
                 float boundY = y;
                 boundY = Math.min(boundY, masterPanel.getHeight() - Settings.ballRadius);
                 boundY = Math.max(boundY, Settings.ballRadius);
                 ball.setPosition(x, boundY);
             }
             // System.out.println("yvel: " + ball.getYVel());
-            // System.out.println(t++);
             // System.out.println("Position" + ball.getPosition());
             // System.out.println("Velocity" + ball.getVelocity());
             // System.out.println("Accel" + ball.getAcceleration());
         }
-        masterPanel.repaint();
+        // System.out.println(t++);
+        t++;
+        int frameMultiple = Settings.refreshRate / Settings.drawRefreshRate;
+        if (frameCount % frameMultiple == 0) {
+            masterPanel.repaint();
+        }
+        frameCount = (frameCount + 1) % Settings.refreshRate;
     }
 
     /**
@@ -152,7 +164,7 @@ public class Bouncer {
      * @return
      *      The program's main content panel
      */
-    public static JPanel getMasterPanel() {
+    public JPanel getMasterPanel() {
         return masterPanel;
     }
 
