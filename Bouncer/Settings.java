@@ -20,7 +20,7 @@ public class Settings {
     private static final float absorptionResistanceY = (float)0.75; // percent of x velocity retained upon contact with horizontal bounds
     private static final float lowVAbsorptionResistanceX = (float)0.01; // percent of x velocity retained upon contact with vertical bounds
     private static final float lowVAbsorptionResistanceY = (float)0.01; // percent of x velocity retained upon contact with horizontal bounds
-    public static final int numBalls = 100;
+    public static final int numBalls = 1;
 
     public static float getFrictionResistanceX() {
         return frictionResistanceX;
