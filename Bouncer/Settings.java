@@ -14,38 +14,37 @@ public class Settings {
     // public static final Point gravity = new Point(0, 20);
     public static final float gravityX = 0;
     public static final float gravityY = 1100;
-    private static final float frictionResistanceX = (float) 0.95; // percent of x velocity retained upon contact with horizontal bounds
-    private static final float frictionResistanceY = (float)0.9; // percent of y velocity retained upon contact with vertical bounds
+    public static final int initialVelocityBoundsX = 200;
+    public static final int initialVelocityBoundsY = 100;
+    public static final int randomVelocityBoundsX = 1000;
+    public static final int randomVelocityBoundsY = 1000;
+    public static final float frictionResistanceX = (float) 0.95; // percent of x velocity retained upon contact with horizontal bounds
+    public static final float frictionResistanceY = (float)0.9; // percent of y velocity retained upon contact with vertical bounds
     private static final float absorptionResistanceX = (float)0.75; // percent of x velocity retained upon contact with vertical bounds
     private static final float absorptionResistanceY = (float)0.75; // percent of x velocity retained upon contact with horizontal bounds
     private static final float lowVAbsorptionResistanceX = (float)0.01; // percent of x velocity retained upon contact with vertical bounds
     private static final float lowVAbsorptionResistanceY = (float)0.01; // percent of x velocity retained upon contact with horizontal bounds
-    public static final int numBalls = 1;
+    public static final int numBalls = 100;
 
-    public static float getFrictionResistanceX() {
-        return frictionResistanceX;
-    }
-
-    public static float getFrictionResistanceY() {
-        return frictionResistanceY;
-    }
-
+    /**
+     * Returns the percent of velocity retained after a ball hits
+     * a horizontal bound
+     * 
+     * @return
+     *      A float in range [0, absorptionResistanceX]
+     */
     public static float getAbsorptionResistanceX(float velocity) {
-        velocity = Math.abs(velocity);
-        if (velocity < 0.105 * gravityX) {
-            return velocity / (gravityX == 0 ? 1 : gravityX);
-        }
-        return absorptionResistanceX;
+        return Math.min(absorptionResistanceX, 5 * Math.abs(velocity) / (gravityX == 0 ? 1 : gravityX));
     }
 
+    /**
+     * Returns the percent of velocity retained after a ball hits
+     * a vertical bound
+     * 
+     * @return
+     *      A float in range [0, absorptionResistanceY]
+     */
     public static float getAbsorptionResistanceY(float velocity) {
-        velocity = Math.abs(velocity);
-        // if (velocity < 0.105 * gravityY) {
-        //     return velocity / gravityY;
-        // }
-        // return absorptionResistanceY;
-        float resistance = Math.min(absorptionResistanceY, 5 * velocity / (gravityY == 0 ? 1 : gravityY));
-        // System.out.println(resistance);
-        return resistance;
+        return Math.min(absorptionResistanceY, 5 * Math.abs(velocity) / (gravityY == 0 ? 1 : gravityY));
     }
 }

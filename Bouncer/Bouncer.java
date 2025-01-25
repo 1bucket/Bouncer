@@ -72,17 +72,14 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
 
         balls = new ArrayList<Ball>();
         Ball ball;
-        int initialVelocityBoundsX = 1000;
-        int initialVelocityBoundsY = 1000;
         for (int num = 0; num < Settings.numBalls; num += 1) {
             // balls spawn in the middle of the screen
             ball = new Ball((int)screenSize.getWidth() / 2, 3 * (int)screenSize.getHeight() / 4);
 
             // initial velocity
             ball.setVelocity(
-                initialVelocityBoundsX * inflate(2 * (float)Math.random() - 1), 
-                // 100,
-                initialVelocityBoundsY * inflate(2 * (float)Math.random() - 1)
+                Settings.initialVelocityBoundsX * inflate(2 * (float)Math.random() - 1), 
+                Settings.initialVelocityBoundsY * inflate(2 * (float)Math.random() - 1)
             );
             // System.out.println(ball.getXVel());
 
@@ -124,7 +121,20 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
     }
 
     /**
-     * Inflation helper method for setting initial velocity
+     * Sets the provided Ball's velocity to a random velocity
+     * 
+     * @param ball
+     *      The ball whose velocity to manipulate
+     */
+    private void randomVelocity(Ball ball) {
+        ball.setVelocity(
+            Settings.randomVelocityBoundsX * inflate(2 * (float)Math.random() - 1), 
+            Settings.randomVelocityBoundsY * inflate(2 * (float)Math.random() - 1)
+        );
+    }
+
+    /**
+     * Inflation helper method for setting random velocity
      * 
      * @return
      *      An inflated value of x
@@ -144,6 +154,12 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
             // collision w/ frame bounds
             x = ball.getXPos();
             y = ball.getYPos();
+            // if (x <= 0 || x > getWidth()) {
+            //     System.out.println("help x");
+            // }
+            // if (y <= 0 || y > getHeight()) {
+            //     System.out.println("help y");
+            // }
 
 
             if (x <= Settings.ballRadius && ball.getXVel() < 0 || 
@@ -187,7 +203,7 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
     private void horizontalBounce(Ball ball) {
         ball.setVelocity(
             -1 * Settings.getAbsorptionResistanceX(ball.getXVel()) * ball.getXVel(), // bounce
-            Settings.getFrictionResistanceY() * ball.getYVel() // friction
+            Settings.frictionResistanceY * ball.getYVel() // friction
         );
         float boundX = ball.getXPos();
         boundX = Math.min(boundX, getWidth() - Settings.ballRadius);
@@ -201,7 +217,7 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
     private void verticalBounce(Ball ball) {
         float former = ball.getYVel();
         ball.setVelocity(
-            Settings.getFrictionResistanceX() * ball.getXVel(), // friction
+            Settings.frictionResistanceX * ball.getXVel(), // friction
             -1 * Settings.getAbsorptionResistanceY(ball.getYVel()) * ball.getYVel() // bounce
         );
         // System.out.println(Math.abs(former) + " to " + Math.abs(ball.getYVel()));
@@ -243,6 +259,9 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        for (Ball ball : balls) {
+            randomVelocity(ball);
+        }
         if (locked) {
             locked = false;
             return;

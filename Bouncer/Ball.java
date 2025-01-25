@@ -11,13 +11,9 @@ import java.awt.Color;
 
 public class Ball {
 
-    private float xPos, yPos;
-    private float xVel, yVel;
-    private float xAccel, yAccel;
-
-    // private Point position; // components in pixels; position of the center of the ball
-    // private Point velocity; // components in pixels/second
-    // private Point acceleration; // components in pixel/second/second
+    private float xPos, yPos; // position in pixels
+    private float xVel, yVel; // velocity in pixels per second
+    private float xAccel, yAccel; // acceleration in pixels per second per second
     private Color color; 
 
     /**
@@ -55,34 +51,20 @@ public class Ball {
      * Applies this Ball's velocity to its position.
      */
     private void applyVelocity() {
-        // double newX = position.getX() + velocity.getX() / Settings.refreshRate;
-        // double newY = position.getY() + velocity.getY() / Settings.refreshRate;
-        float dx = xVel / Settings.refreshRate;
-        float dy = yVel / Settings.refreshRate;
-        // float delay = Bouncer.timer.getDelay() / (float)1000.0;
-        // float dx = xVel * delay;
-        // float dy = yVel * delay;
-        // System.out.println("dx: " + dx + ", dy: " + dy);
-        float newX = xPos + dx;
-        float newY = yPos + dy;
-        // System.out.println("newX: " + newX + "newY: " + newY);
-        setPosition(newX, newY);
+        setPosition(
+            xPos + xVel / Settings.refreshRate, 
+            yPos + yVel / Settings.refreshRate
+        );
     }
 
     /**
      * Applies this Ball's acceleration to its velocity.
      */
     private void applyAcceleration() {
-        // double newVX = velocity.getX() + acceleration.getX() / Settings.refreshRate;
-        // double newVY = velocity.getY() + acceleration.getY() / Settings.refreshRate;
-        float dx = xAccel / Settings.refreshRate;
-        float dy = yAccel / Settings.refreshRate;
-        // float delay = Bouncer.timer.getDelay() / (float)1000.0;
-        // float dx = xAccel * delay;
-        // float dy = yAccel * delay;
-        float newVX = xVel + dx;
-        float newVY = yVel + dy;
-        setVelocity(newVX, newVY);
+        setVelocity(
+            xVel + xAccel / Settings.refreshRate, 
+            yVel + yAccel / Settings.refreshRate
+        );
     }
 
     /**
