@@ -47,25 +47,6 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
         frame.setPreferredSize(screenSize);
         frame.pack();
 
-        // masterPanel = new JPanel() {
-        //     @Override
-        //     protected void paintComponent(Graphics g) {
-        //         super.paintComponent(g);
-        //         Point pos;
-        //         int diameter = Settings.ballRadius * 2;
-        //         int drawPosX, drawPosY;
-        //         for (Ball ball : balls) {
-        //             g.setColor(ball.getColor());
-        //             drawPosX = (int)ball.getXPos() - Settings.ballRadius;
-        //             drawPosY = (int)ball.getYPos() - Settings.ballRadius;
-
-        //             g.fillOval(drawPosX, drawPosY, diameter, diameter);
-        //         }
-        //     }
-        // };
-        // masterPanel.setLayout(null);
-        // masterPanel.setBackground(Color.BLACK);
-        // frame.setContentPane(masterPanel);
         setLayout(null);
         setBackground(Color.BLACK);
         frame.setContentPane(this);
@@ -117,7 +98,6 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
 
         // display frame
         frame.setVisible(true);
-        // System.out.println("panel: " + frame.getWidth() + ", " + frame.getHeight());
     }
 
     /**
@@ -154,12 +134,6 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
             // collision w/ frame bounds
             x = ball.getXPos();
             y = ball.getYPos();
-            // if (x <= 0 || x > getWidth()) {
-            //     System.out.println("help x");
-            // }
-            // if (y <= 0 || y > getHeight()) {
-            //     System.out.println("help y");
-            // }
 
 
             if (x <= Settings.ballRadius && ball.getXVel() < 0 || 
@@ -181,12 +155,6 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
             else {
                 ball.setAcceleration(Settings.gravityX, Settings.gravityY);
             }
-
-
-            // System.out.println("yvel: " + ball.getYVel());
-            // System.out.println("Position" + ball.getPosition());
-            // System.out.println("Velocity" + ball.getVelocity());
-            // System.out.println("Accel" + ball.getAcceleration());
         }
         // System.out.println(t++);
         t++;
@@ -215,7 +183,6 @@ public class Bouncer extends JPanel implements MouseListener, MouseMotionListene
      * Bounces the ball upon contact with a horizontal bound
      */
     private void verticalBounce(Ball ball) {
-        float former = ball.getYVel();
         ball.setVelocity(
             Settings.frictionResistanceX * ball.getXVel(), // friction
             -1 * Settings.getAbsorptionResistanceY(ball.getYVel()) * ball.getYVel() // bounce
